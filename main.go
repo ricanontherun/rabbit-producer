@@ -103,7 +103,10 @@ func main() {
 	failOnError(err, "Failed to create RabbitMQ channel")
 	defer channel.Close()
 
-	contentType := guessContentType(opts.message)
+	contentType := opts.contentType
+	if len(contentType) == 0 {
+		contentType = guessContentType(opts.message)
+	}
 
 	err = channel.Publish(opts.exchange, opts.routingKey, false, false, amqp.Publishing{
 		ContentType: contentType,
